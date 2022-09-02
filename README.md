@@ -1,5 +1,10 @@
 # lipgloss-convert
 
+[![GoDoc](https://godoc.org/github.com/golang/gddo?status.svg)](https://pkg.go.dev/github.com/knz/lipgloss-convert)
+[![Build Status](https://github.com/knz/lipgloss-convert/workflows/build/badge.svg)](https://github.com/knz/lipgloss-convert/actions)
+[![Go ReportCard](https://goreportcard.com/badge/knz/lipgloss-convert)](https://goreportcard.com/report/knz/lipgloss-convert)
+[![Coverage Status](https://coveralls.io/repos/github/knz/lipgloss-convert/badge.svg)](https://coveralls.io/github/knz/lipgloss-convert)
+
 String conversion functions for [lipgloss](https://github.com/charmbracelet/lipgloss) Styles.
 
 This library defines the following two functions:
