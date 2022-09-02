@@ -370,7 +370,6 @@ type bordertype struct{}
 
 func (bordertype) parse(input []byte, first int) (pos int, val reflect.Value, err error) {
 	pos = first
-	pos = first
 	r := reBorder.FindSubmatch(input[pos:])
 	if r == nil {
 		return pos, val, fmt.Errorf("no valid border value found")
