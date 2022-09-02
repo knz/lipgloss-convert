@@ -452,7 +452,6 @@ func snakeCase(s string) string {
 var propRegistry = map[string]prop{}
 
 type prop struct {
-	name       string
 	setFn      reflect.Value
 	unsetFn    reflect.Value
 	isVariadic bool
