@@ -370,6 +370,26 @@ type bordertype struct{}
 
 func (bordertype) parse(input []byte, first int) (pos int, val reflect.Value, err error) {
 	pos = first
+	if r := reSpecialBorder.FindSubmatch(input[pos:]); r != nil {
+		pos += len(r[0])
+		word := string(r[1])
+		var b lipgloss.Border
+		switch word {
+		case "rounded":
+			b = lipgloss.RoundedBorder()
+		case "normal":
+			b = lipgloss.NormalBorder()
+		case "thick":
+			b = lipgloss.ThickBorder()
+		case "hidden":
+			b = lipgloss.HiddenBorder()
+		case "double":
+			b = lipgloss.DoubleBorder()
+		default:
+			return pos, val, fmt.Errorf("unrecognized border name: %q", word)
+		}
+		return pos, reflect.ValueOf(b), nil
+	}
 	r := reBorder.FindSubmatch(input[pos:])
 	if r == nil {
 		return pos, val, fmt.Errorf("no valid border value found")
@@ -401,7 +421,7 @@ func (bordertype) parse(input []byte, first int) (pos int, val reflect.Value, er
 // "\U12345678" - a hex-encoded rune
 var reBorderStr = `"(?:\\[\\"]|\\[0-7]{3}|\\x[0-9a-fA-F]{2}|\\u[0-9]{4}|\\U[0-9]{8}|[^\\"])*"`
 
-var reBorder = regexp.MustCompile(`\s*(?:border\s*\(\s*(` +
+var reBorder = regexp.MustCompile(`^\s*(?:border\s*\(\s*(` +
 	reBorderStr + `)\s*,\s*(` +
 	reBorderStr + `)\s*,\s*(` +
 	reBorderStr + `)\s*,\s*(` +
@@ -410,6 +430,8 @@ var reBorder = regexp.MustCompile(`\s*(?:border\s*\(\s*(` +
 	reBorderStr + `)\s*,\s*(` +
 	reBorderStr + `)\s*,\s*(` +
 	reBorderStr + `)\s*\))(?:\s+|$)`)
+
+var reSpecialBorder = regexp.MustCompile(`^\s*(rounded|normal|thick|hidden|double)(?:\s+|$)`)
 
 // camelCase converts hello-world to HelloWorld.
 func camelCase(s string) string {

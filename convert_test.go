@@ -46,6 +46,18 @@ func TestImport(t *testing.T) {
 		{emptyStyle, `foreground: adaptive(1,2)`, `foreground: adaptive(1,2);`, ``},
 		{emptyStyle, `foreground: adaptive(a,b)`, ``, `in "foreground: adaptive(a,b)": color not recognized: "a"`},
 		{emptyStyle, `foreground: adaptive(1,b)`, ``, `in "foreground: adaptive(1,b)": color not recognized: "b"`},
+		{emptyStyle, `margin: 10`, `margin-bottom: 10;
+margin-left: 10;
+margin-right: 10;
+margin-top: 10;`, ``},
+		{emptyStyle, `margin: 10 20`, `margin-bottom: 10;
+margin-left: 20;
+margin-right: 20;
+margin-top: 10;`, ``},
+		{emptyStyle, `margin: 10 20 30 40`, `margin-bottom: 30;
+margin-left: 40;
+margin-right: 20;
+margin-top: 10;`, ``},
 		{emptyStyle, `border-style: border("","","","","","","","")`, ``, ``},
 		{emptyStyle, `border-style: xx`, ``, `in "border-style: xx": no valid border value found`},
 		{emptyStyle,
@@ -65,6 +77,21 @@ border-top-width: 1;`, ``},
 			`border: border("a","b","c","d","e","f","g","h") true xx`,
 			``,
 			`in "border: border(\"a\",\"b\",\"c\",\"d\",\"e\",\"f\",\"g\",\"h\") true xx": no value found`},
+		{emptyStyle,
+			`border-style: rounded`,
+			`border-style: border("─","─","│","│","╭","╮","╯","╰");`, ``},
+		{emptyStyle,
+			`border-style: normal`,
+			`border-style: border("─","─","│","│","┌","┐","┘","└");`, ``},
+		{emptyStyle,
+			`border-style: thick`,
+			`border-style: border("━","━","┃","┃","┏","┓","┛","┗");`, ``},
+		{emptyStyle,
+			`border-style: hidden`,
+			`border-style: border(" "," "," "," "," "," "," "," ");`, ``},
+		{emptyStyle,
+			`border-style: double`,
+			`border-style: border("═","═","║","║","╔","╗","╝","╚");`, ``},
 	}
 
 	for i, tc := range td {
@@ -108,16 +135,18 @@ func TestExport(t *testing.T) {
 		Bold(true).
 		Align(lipgloss.Center).
 		Foreground(lipgloss.Color("#FAFAFA")).
-		Background(lipgloss.Color("#7D56F4")).
+		Background(lipgloss.AdaptiveColor{"#7D56F4", "#112233"}).
 		BorderTopForeground(lipgloss.Color("12")).
+		BorderStyle(lipgloss.RoundedBorder()).
 		PaddingTop(2).
 		PaddingLeft(4).
 		Width(22)
 
 	t.Run("shortened", func(t *testing.T) {
 		exp := `align: 0.5;
-background: #7D56F4;
+background: adaptive(#7D56F4,#112233);
 bold: true;
+border-style: border("─","─","│","│","╭","╮","╯","╰");
 border-top-foreground: 12;
 foreground: #FAFAFA;
 padding-left: 4;
@@ -142,7 +171,7 @@ width: 22;`
 
 	t.Run("full", func(t *testing.T) {
 		exp := `align: 0.5;
-background: #7D56F4;
+background: adaptive(#7D56F4,#112233);
 blink: false;
 bold: true;
 border-bottom: false;
@@ -157,7 +186,7 @@ border-right: false;
 border-right-background: none;
 border-right-foreground: none;
 border-right-size: 0;
-border-style: border("","","","","","","","");
+border-style: border("─","─","│","│","╭","╮","╯","╰");
 border-top: false;
 border-top-background: none;
 border-top-foreground: 12;

@@ -37,8 +37,9 @@ func main() {
         Bold(true).
         Align(lipgloss.Center).
         Foreground(lipgloss.Color("#FAFAFA")).
-        Background(lipgloss.Color("#7D56F4")).
+        Background(lipgloss.AdaptiveColor{"#7D56F4", "#112233"})).
         BorderTopForeground(lipgloss.Color("12")).
+        BorderStyle(lipgloss.RoundedBorder()).
         PaddingTop(2).
         PaddingLeft(4).
         Width(22)
@@ -51,8 +52,9 @@ Displays:
 
 ``` css
 align: 0.5;
-background: #7D56F4;
+background: adaptive(#7D56F4,#112233);
 bold: true;
+border-style: border("─","─","│","│","╭","╮","╯","╰");
 border-top-foreground: 12;
 foreground: #FAFAFA;
 padding-left: 4;
@@ -70,3 +72,40 @@ properties, as follows:
 - `Foreground` in lipgloss becomes `foreground` in the textual syntax.
 - `UnderlineSpaces` becomes `underline-spaces`.
 - etc.
+
+It also supports the following special values:
+
+- For colors:
+
+  ```
+  foreground: #abc;
+  foreground: #aabbcc;
+  foreground: 123;
+  foreground: adaptive(<color>,<color>);
+  ```
+
+- Padding, margin etc which can take multiple values at once:
+
+  ```
+  margin: 10
+  margin: 10 20
+  margin: 10 20 10 20
+  ```
+
+- Border styles:
+
+  ```
+  border-style: rounded;
+  border-style: hidden;
+  border-style: normal;
+  border-style: thick;
+  border-style: double;
+  ```
+
+- Border styles with top/bottom or left/right selection (see the doc
+  for `lipgloss.Style`'s `Border()` method):
+
+  ```
+  border-style: normal true false;
+  border-style: normal true false false true;
+  ```
