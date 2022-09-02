@@ -135,7 +135,7 @@ func TestExport(t *testing.T) {
 		Bold(true).
 		Align(lipgloss.Center).
 		Foreground(lipgloss.Color("#FAFAFA")).
-		Background(lipgloss.AdaptiveColor{"#7D56F4", "#112233"}).
+		Background(lipgloss.AdaptiveColor{Light: "#7D56F4", Dark: "#112233"}).
 		BorderTopForeground(lipgloss.Color("12")).
 		BorderStyle(lipgloss.RoundedBorder()).
 		PaddingTop(2).
