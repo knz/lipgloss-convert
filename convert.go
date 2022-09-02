@@ -52,7 +52,7 @@ type options struct {
 
 type ExportOption func(*options)
 
-// WithSeparator includes the fields that are set to default values.
+// WithSeparator sets the separator between directives.
 func WithSeparator(sep string) ExportOption {
 	return func(e *options) {
 		e.sep = sep
