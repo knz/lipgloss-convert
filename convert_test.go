@@ -18,15 +18,26 @@ func TestImport(t *testing.T) {
 		expErr string
 	}{
 		{emptyStyle, ``, ``, ``},
+		{emptyStyle, `invalid`, ``, `invalid syntax: "invalid"`},
+		{emptyStyle, `set-foo: bar`, ``, `in "set-foo: bar": don't use 'set-xx: foo;'  use 'xx: foo;' instead`},
+		{emptyStyle, `unset-foo: bar`, ``, `in "unset-foo: bar": don't use 'unset-xx: foo;' use 'xx: unset;' instead`},
+		{emptyStyle, `get-foo: bar`, ``, `in "get-foo: bar": property not supported: "get-foo"`},
+		{emptyStyle, `unsupported: foo`, ``, `in "unsupported: foo": property not supported: "unsupported"`},
+		{emptyStyle, `render: foo`, ``, `in "render: foo": method "Render" exists but does not return Style`},
 		{emptyStyle.PaddingLeft(11), `padding-left:22`, `padding-left: 22;`, ``},
+		{emptyStyle, `padding-left:aaa`, ``, `in "padding-left:aaa": no value found`},
+		{emptyStyle, `padding-left:9999999999999999999999`, ``, `in "padding-left:9999999999999999999999": strconv.Atoi: parsing "9999999999999999999999": value out of range`},
 		{emptyStyle, `bold: true`, `bold: true;`, ``},
+		{emptyStyle, `bold: aa`, ``, `in "bold: aa": no value found`},
 		{emptyStyle, `bold: true extra`, ``, `in "bold: true extra": excess values at end: ...extra`},
 		{emptyStyle.Foreground(lipgloss.Color("11")), `foreground: unset`, ``, ``},
 		{emptyStyle, `align: top`, ``, ``},
+		{emptyStyle, `align: xx`, ``, `in "align: xx": no value found`},
 		{emptyStyle, `align: bottom`, `align: 1;`, ``},
 		{emptyStyle, `align: center`, `align: 0.5;`, ``},
 		{emptyStyle, `align: left`, ``, ``},
 		{emptyStyle, `align: right`, `align: 1;`, ``},
+		{emptyStyle, `align: 1.0`, `align: 1;`, ``},
 		{emptyStyle.Foreground(lipgloss.Color("11")), `foreground: none`, ``, ``},
 		{emptyStyle, `foreground: 11`, `foreground: 11;`, ``},
 		{emptyStyle, `foreground: #123`, `foreground: #123;`, ``},
@@ -34,7 +45,9 @@ func TestImport(t *testing.T) {
 		{emptyStyle, `foreground: #axxa`, ``, `in "foreground: #axxa": color not recognized`},
 		{emptyStyle, `foreground: adaptive(1,2)`, `foreground: adaptive(1,2);`, ``},
 		{emptyStyle, `foreground: adaptive(a,b)`, ``, `in "foreground: adaptive(a,b)": color not recognized: "a"`},
+		{emptyStyle, `foreground: adaptive(1,b)`, ``, `in "foreground: adaptive(1,b)": color not recognized: "b"`},
 		{emptyStyle, `border-style: border("","","","","","","","")`, ``, ``},
+		{emptyStyle, `border-style: xx`, ``, `in "border-style: xx": no valid border value found`},
 		{emptyStyle,
 			`border-style: border("a","b","c","d","e","f","g","h")`,
 			`border-style: border("a","b","c","d","e","f","g","h");`, ``},
@@ -48,6 +61,10 @@ border-bottom-size: 1;
 border-style: border("a","b","c","d","e","f","g","h");
 border-top: true;
 border-top-width: 1;`, ``},
+		{emptyStyle,
+			`border: border("a","b","c","d","e","f","g","h") true xx`,
+			``,
+			`in "border: border(\"a\",\"b\",\"c\",\"d\",\"e\",\"f\",\"g\",\"h\") true xx": no value found`},
 	}
 
 	for i, tc := range td {

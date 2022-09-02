@@ -2,7 +2,6 @@ package lipglossc
 
 import (
 	"fmt"
-	"os"
 	"reflect"
 	"regexp"
 	"strconv"
@@ -97,7 +96,6 @@ func Export(s S, opts ...ExportOption) string {
 		}
 
 		res := m.Func.Call([]reflect.Value{v})
-		fmt.Fprintf(os.Stderr, "getter %q -> %d %v\n", m.Name, len(res), res)
 
 		if !opt.includeDefaults && len(res) == 1 && isDefault(res[0]) {
 			// Default value. Don't report anything for this getter.
@@ -327,7 +325,6 @@ var rePos = regexp.MustCompile(`^\s*(top|bottom|center|left|right|1|1\.0|0\.5|\.
 type colortype struct{}
 
 func (colortype) parse(input []byte, first int) (pos int, val reflect.Value, err error) {
-	fmt.Fprintf(os.Stderr, "parsing color: %q\n", string(input[pos:]))
 	pos = first
 	// possible syntaxes:
 	// - adaptive(X, Y)
@@ -353,7 +350,6 @@ func (colortype) parse(input []byte, first int) (pos int, val reflect.Value, err
 	}
 	pos += len(r[0])
 	word := string(r[1])
-	fmt.Fprintf(os.Stderr, "parsing color: %q\n", word)
 	switch word {
 	case "none":
 		val = reflect.ValueOf(lipgloss.NoColor{})
@@ -484,7 +480,6 @@ func (p prop) assign(dst S, args string) (S, error) {
 		if err != nil {
 			return dst, err
 		}
-		fmt.Fprintf(os.Stderr, "parsed argument with type %v\n", val.Type())
 		vals = append(vals, val)
 	}
 	if p.isVariadic {
@@ -502,7 +497,6 @@ func (p prop) assign(dst S, args string) (S, error) {
 		return dst, fmt.Errorf("excess values at end: ...%s", string(input[pos:]))
 	}
 
-	fmt.Fprintf(os.Stderr, "running %v with %v\n", p.setFn, vals)
 	// Finally call the setter.
 	out := p.setFn.Call(vals)
 	return out[0].Interface().(lipgloss.Style), nil
