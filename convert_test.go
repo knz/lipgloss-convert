@@ -76,6 +76,18 @@ border-style: border("a","b","c","d","e","f","g","h");
 border-top: true;
 border-top-width: 1;`, ``},
 		{emptyStyle,
+			`border: border("a","b","c","d","e","f","g","h")`,
+			`border-bottom: true;
+border-bottom-size: 1;
+border-left: true;
+border-left-size: 1;
+border-right: true;
+border-right-size: 1;
+border-style: border("a","b","c","d","e","f","g","h");
+border-top: true;
+border-top-width: 1;`,
+			``},
+		{emptyStyle,
 			`border: border("a","b","c","d","e","f","g","h") true xx`,
 			``,
 			`in "border: border(\"a\",\"b\",\"c\",\"d\",\"e\",\"f\",\"g\",\"h\") true xx": no value found`},

@@ -497,8 +497,12 @@ func (p prop) assign(dst S, args string) (S, error) {
 	vals = append(vals, reflect.ValueOf(dst))
 	pos := 0
 	input := []byte(args)
-	for _, arg := range p.args {
+	for i, arg := range p.args {
 		if pos >= len(input) {
+			if p.isVariadic && i == len(p.args)-1 {
+				// It's ok for a variadic arg list to have zero argument.
+				break
+			}
 			return dst, fmt.Errorf("missing value")
 		}
 		var err error
