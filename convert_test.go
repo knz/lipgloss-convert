@@ -71,21 +71,15 @@ margin-top: 10;`, ``},
 		{emptyStyle,
 			`border: border("a","b","c","d","e","f","g","h") true false`,
 			`border-bottom: true;
-border-bottom-size: 1;
 border-style: border("a","b","c","d","e","f","g","h");
-border-top: true;
-border-top-width: 1;`, ``},
+border-top: true;`, ``},
 		{emptyStyle,
 			`border: border("a","b","c","d","e","f","g","h")`,
 			`border-bottom: true;
-border-bottom-size: 1;
 border-left: true;
-border-left-size: 1;
 border-right: true;
-border-right-size: 1;
 border-style: border("a","b","c","d","e","f","g","h");
-border-top: true;
-border-top-width: 1;`,
+border-top: true;`,
 			``},
 		{emptyStyle,
 			`border: border("a","b","c","d","e","f","g","h") true xx`,
@@ -191,20 +185,16 @@ bold: true;
 border-bottom: false;
 border-bottom-background: none;
 border-bottom-foreground: none;
-border-bottom-size: 0;
 border-left: false;
 border-left-background: none;
 border-left-foreground: none;
-border-left-size: 0;
 border-right: false;
 border-right-background: none;
 border-right-foreground: none;
-border-right-size: 0;
 border-style: border("─","─","│","│","╭","╮","╯","╰");
 border-top: false;
 border-top-background: none;
 border-top-foreground: 12;
-border-top-width: 0;
 color-whitespace: false;
 faint: false;
 foreground: #FAFAFA;

@@ -178,6 +178,12 @@ var ignoredMethods = map[string]bool{
 	"GetHorizontalPadding":    true,
 	"GetVerticalBorderSize":   true,
 	"GetHorizontalBorderSize": true,
+	"GetBorderBottomSize":     true,
+	"GetBorderTopSize":        true,
+	"GetBorderBottomWidth":    true, // facepalm
+	"GetBorderTopWidth":       true, // facepalm
+	"GetBorderLeftSize":       true,
+	"GetBorderRightSize":      true,
 }
 
 func getProp(name string) (prop, error) {
