@@ -1,5 +1,6 @@
 # lipgloss-convert
 
+[![Latest Release](https://img.shields.io/github/release/knz/lipgloss-convert.svg)](https://github.com/knz/lipgloss-convert/releases)
 [![GoDoc](https://godoc.org/github.com/golang/gddo?status.svg)](https://pkg.go.dev/github.com/knz/lipgloss-convert)
 [![Build Status](https://github.com/knz/lipgloss-convert/workflows/build/badge.svg)](https://github.com/knz/lipgloss-convert/actions)
 [![Go ReportCard](https://goreportcard.com/badge/knz/lipgloss-convert)](https://goreportcard.com/report/knz/lipgloss-convert)
