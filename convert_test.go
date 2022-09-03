@@ -39,6 +39,8 @@ func TestImport(t *testing.T) {
 		{emptyStyle, `align: right`, `align: 1;`, ``},
 		{emptyStyle, `align: 1.0`, `align: 1;`, ``},
 		{emptyStyle.Foreground(lipgloss.Color("11")), `foreground: none`, ``, ``},
+		{emptyStyle.Foreground(lipgloss.Color("11")), `clear`, ``, ``},
+		{emptyStyle.Foreground(lipgloss.Color("11")), `background: 12; clear`, ``, ``},
 		{emptyStyle, `foreground: 11`, `foreground: 11;`, ``},
 		{emptyStyle, `foreground: #123`, `foreground: #123;`, ``},
 		{emptyStyle, `foreground: #123456`, `foreground: #123456;`, ``},

@@ -25,6 +25,12 @@ func Import(dst S, input string) (S, error) {
 			continue
 		}
 
+		if a == "clear" {
+			// Special keyword: reset style.
+			dst = lipgloss.NewStyle()
+			continue
+		}
+
 		pair := strings.SplitN(a, ":", 2)
 		if len(pair) != 2 {
 			return dst, fmt.Errorf("invalid syntax: %q", a)

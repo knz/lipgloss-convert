@@ -21,6 +21,7 @@ func Import(dst Style, input string) (Style, error)
 func Export(s Style) string
 ```
 
+## Exporting styles to text
 
 For example:
 
@@ -62,18 +63,22 @@ padding-top: 2;
 width: 22;
 ```
 
-Then using the `Import()` function on the result will recover the original `lipgloss.Style`.
+## Importing styles from text
 
-See the [lipgloss
+The `Import` function applies the text directives specified in its input
+argument to the style also provided as argument. Other properties already
+in the style remain unchanged.
+
+Which properties are supported? See the [lipgloss
 documentation](https://pkg.go.dev/github.com/charmbracelet/lipgloss)
-for details. This library automatically supports all the lipgloss
+for details. `Import` automatically supports all the lipgloss
 properties, as follows:
 
 - `Foreground` in lipgloss becomes `foreground` in the textual syntax.
 - `UnderlineSpaces` becomes `underline-spaces`.
 - etc.
 
-It also supports the following special values:
+`Import` also supports the following special cases:
 
 - For colors:
 
@@ -109,3 +114,6 @@ It also supports the following special values:
   border-style: normal true false;
   border-style: normal true false false true;
   ```
+
+- Resetting a style with `clear`: this erases all the properties
+  in the style, to start with a fresh style.
