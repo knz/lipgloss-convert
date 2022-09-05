@@ -112,8 +112,8 @@ properties, as follows:
   for `lipgloss.Style`'s `Border()` method):
 
   ```
-  border-style: normal true false;
-  border-style: normal true false false true;
+  border: normal true false;
+  border: normal true false false true;
   ```
 
 - Resetting a style with `clear`: this erases all the properties
