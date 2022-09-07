@@ -51,8 +51,12 @@ align-vertical: 1;`, ``},
 		{emptyStyle, `foreground: #123456`, `foreground: #123456;`, ``},
 		{emptyStyle, `foreground: #axxa`, ``, `in "foreground: #axxa": color not recognized`},
 		{emptyStyle, `foreground: adaptive(1,2)`, `foreground: adaptive(1,2);`, ``},
+		{emptyStyle, `foreground: complete(#111, 22, 3)`, `foreground: complete(#111,22,3);`, ``},
+		{emptyStyle, `foreground: adaptive(complete(#111, 22, 3), complete(#444,55,6))`, `foreground: adaptive(complete(#111,22,3),complete(#444,55,6));`, ``},
 		{emptyStyle, `foreground: adaptive(a,b)`, ``, `in "foreground: adaptive(a,b)": color not recognized: "a"`},
 		{emptyStyle, `foreground: adaptive(1,b)`, ``, `in "foreground: adaptive(1,b)": color not recognized: "b"`},
+		{emptyStyle, `foreground: complete(1,1,b)`, ``, `in "foreground: complete(1,1,b)": color not recognized: "b"`},
+		{emptyStyle, `foreground: adaptive(complete(1,1,b),complete(2,2,b))`, ``, `in "foreground: adaptive(complete(1,1,b),complete(2,2,b))": color not recognized: "b"`},
 		{emptyStyle, `margin: 10`, `margin-bottom: 10;
 margin-left: 10;
 margin-right: 10;
