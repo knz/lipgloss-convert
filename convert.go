@@ -166,6 +166,7 @@ func isDefault(v reflect.Value) bool {
 }
 
 var ignoredMethods = map[string]bool{
+	"GetAlign":                true,
 	"GetBorder":               true,
 	"GetMargin":               true,
 	"GetPadding":              true,

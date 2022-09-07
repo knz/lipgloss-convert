@@ -90,7 +90,7 @@ properties, as follows:
   foreground: adaptive(<color>,<color>);
   ```
 
-- Padding, margin etc which can take multiple values at once:
+- Padding, margin, align etc which can take multiple values at once:
 
   ```
   margin: 10

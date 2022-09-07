@@ -31,13 +31,18 @@ func TestImport(t *testing.T) {
 		{emptyStyle, `bold: aa`, ``, `in "bold: aa": no value found`},
 		{emptyStyle, `bold: true extra`, ``, `in "bold: true extra": excess values at end: ...extra`},
 		{emptyStyle.Foreground(lipgloss.Color("11")), `foreground: unset`, ``, ``},
-		{emptyStyle, `align: top`, ``, ``},
-		{emptyStyle, `align: xx`, ``, `in "align: xx": no value found`},
-		{emptyStyle, `align: bottom`, `align: 1;`, ``},
-		{emptyStyle, `align: center`, `align: 0.5;`, ``},
+		{emptyStyle, `align-horizontal: left`, ``, ``},
 		{emptyStyle, `align: left`, ``, ``},
-		{emptyStyle, `align: right`, `align: 1;`, ``},
-		{emptyStyle, `align: 1.0`, `align: 1;`, ``},
+		{emptyStyle, `align: xx`, ``, `in "align: xx": no value found`},
+		{emptyStyle, `align: center`, `align-horizontal: 0.5;`, ``},
+		{emptyStyle, `align: right`, `align-horizontal: 1;`, ``},
+		{emptyStyle, `align: 1.0`, `align-horizontal: 1;`, ``},
+		{emptyStyle, `align-horizontal: right`, `align-horizontal: 1;`, ``},
+		{emptyStyle, `align-vertical: top`, ``, ``},
+		{emptyStyle, `align-vertical: center`, `align-vertical: 0.5;`, ``},
+		{emptyStyle, `align-vertical: bottom`, `align-vertical: 1;`, ``},
+		{emptyStyle, `align: bottom right`, `align-horizontal: 1;
+align-vertical: 1;`, ``},
 		{emptyStyle.Foreground(lipgloss.Color("11")), `foreground: none`, ``, ``},
 		{emptyStyle.Foreground(lipgloss.Color("11")), `clear`, ``, ``},
 		{emptyStyle.Foreground(lipgloss.Color("11")), `background: 12; clear`, ``, ``},
@@ -151,7 +156,7 @@ func TestExport(t *testing.T) {
 		Width(22)
 
 	t.Run("shortened", func(t *testing.T) {
-		exp := `align: 0.5;
+		exp := `align-horizontal: 0.5;
 background: adaptive(#7D56F4,#112233);
 bold: true;
 border-style: border("─","─","│","│","╭","╮","╯","╰");
@@ -178,7 +183,8 @@ width: 22;`
 	})
 
 	t.Run("full", func(t *testing.T) {
-		exp := `align: 0.5;
+		exp := `align-horizontal: 0.5;
+align-vertical: 0;
 background: adaptive(#7D56F4,#112233);
 blink: false;
 bold: true;
