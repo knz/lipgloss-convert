@@ -480,7 +480,7 @@ func (bordertype) parse(input []byte, first int) (pos int, val reflect.Value, er
 // "\xFF" - a hex-encoded ascii value
 // "\u1234" - a hex-encoded rune
 // "\U12345678" - a hex-encoded rune
-var reBorderStr = `"(?:\\[\\"]|\\[0-7]{3}|\\x[0-9a-fA-F]{2}|\\u[0-9]{4}|\\U[0-9]{8}|[^\\"])*"`
+var reBorderStr = `"(?:\\[\\"]|\\[0-7]{3}|\\x[0-9a-fA-F]{2}|\\u[0-9a-fA-F]{4}|\\U[0-9a-fA-F]{8}|[^\\"])*"`
 
 var reBorder = regexp.MustCompile(`^\s*(?:border\s*\(\s*(` +
 	reBorderStr + `)\s*,\s*(` +
