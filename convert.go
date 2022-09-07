@@ -135,6 +135,13 @@ func printValue(buf *strings.Builder, v reflect.Value) {
 			buf.WriteString(string(c))
 		case lipgloss.AdaptiveColor:
 			fmt.Fprintf(buf, "adaptive(%s,%s)", c.Light, c.Dark)
+		case lipgloss.CompleteColor:
+			fmt.Fprintf(buf, "complete(%s,%s,%s)", c.TrueColor, c.ANSI256, c.ANSI)
+		case lipgloss.CompleteAdaptiveColor:
+			fmt.Fprintf(buf, "adaptive(complete(%s,%s,%s),complete(%s,%s,%s))",
+				c.Light.TrueColor, c.Light.ANSI256, c.Light.ANSI,
+				c.Dark.TrueColor, c.Dark.ANSI256, c.Dark.ANSI,
+			)
 		default:
 			r, g, b, _ := tc.RGBA()
 			fmt.Fprintf(buf, "#%02x%02x%02x", r, g, b)
@@ -166,6 +173,7 @@ func isDefault(v reflect.Value) bool {
 }
 
 var ignoredMethods = map[string]bool{
+	"GetAlign":                true,
 	"GetBorder":               true,
 	"GetMargin":               true,
 	"GetPadding":              true,
@@ -336,22 +344,54 @@ var rePos = regexp.MustCompile(`^\s*(top|bottom|center|left|right|1|1\.0|0\.5|\.
 
 type colortype struct{}
 
+func getColors(rematch [][]byte, cvals []string) error {
+	for i := 0; i < len(cvals); i++ {
+		val := strings.TrimSpace(string(rematch[i+1]))
+		if !reColor.MatchString(val) {
+			return fmt.Errorf("color not recognized: %q", val)
+		}
+		cvals[i] = val
+	}
+	return nil
+}
+
 func (colortype) parse(input []byte, first int) (pos int, val reflect.Value, err error) {
 	pos = first
 	// possible syntaxes:
 	// - adaptive(X, Y)
+	// - complete(X, Y, Z)
+	// - adaptive(complete(A,B,C), complete(D,E,F))
 	// - one word, either "none", just a number or a RGB value
 	if r := reAdaptive.FindSubmatch(input[pos:]); r != nil {
 		pos += len(r[0])
-		firstValue := strings.TrimSpace(string(r[1]))
-		if !reColor.MatchString(firstValue) {
-			return pos, val, fmt.Errorf("color not recognized: %q", firstValue)
+		var cvals [2]string
+		if err := getColors(r, cvals[:]); err != nil {
+			return pos, val, err
 		}
-		secondValue := strings.TrimSpace(string(r[2]))
-		if !reColor.MatchString(secondValue) {
-			return pos, val, fmt.Errorf("color not recognized: %q", secondValue)
+		c := lipgloss.AdaptiveColor{Light: cvals[0], Dark: cvals[1]}
+		val = reflect.ValueOf(c)
+		return pos, val, nil
+	}
+	if r := reComplete.FindSubmatch(input[pos:]); r != nil {
+		pos += len(r[0])
+		var cvals [3]string
+		if err := getColors(r, cvals[:]); err != nil {
+			return pos, val, err
 		}
-		c := lipgloss.AdaptiveColor{Light: firstValue, Dark: secondValue}
+		c := lipgloss.CompleteColor{TrueColor: cvals[0], ANSI256: cvals[1], ANSI: cvals[2]}
+		val = reflect.ValueOf(c)
+		return pos, val, nil
+	}
+	if r := reCompleteAdaptive.FindSubmatch(input[pos:]); r != nil {
+		pos += len(r[0])
+		var cvals [6]string
+		if err := getColors(r, cvals[:]); err != nil {
+			return pos, val, err
+		}
+		c := lipgloss.CompleteAdaptiveColor{
+			Light: lipgloss.CompleteColor{TrueColor: cvals[0], ANSI256: cvals[1], ANSI: cvals[2]},
+			Dark:  lipgloss.CompleteColor{TrueColor: cvals[3], ANSI256: cvals[4], ANSI: cvals[5]},
+		}
 		val = reflect.ValueOf(c)
 		return pos, val, nil
 	}
@@ -377,6 +417,15 @@ func (colortype) parse(input []byte, first int) (pos int, val reflect.Value, err
 var reColor = regexp.MustCompile(`^\s*(\d+|#[0-9a-fA-F]{3}|#[0-9a-fA-F]{6})(?:\s+|$)`)
 var reColorOrNone = regexp.MustCompile(`^\s*(none|\d+|#[0-9a-fA-F]{3}|#[0-9a-fA-F]{6})(?:\s+|$)`)
 var reAdaptive = regexp.MustCompile(`^\s*(?:adaptive\s*\(([^,]*),([^,]*)\))(?:\s+|$)`)
+
+var reComplete = regexp.MustCompile(`^\s*(?:complete\s*\(([^,]*),([^,]*),([^,]*)\))(?:\s+|$)`)
+
+var reCompleteAdaptive = regexp.MustCompile(`^\s*(?:` +
+	`adaptive\s*\(\s*` +
+	`complete\s*\(([^,]*),([^,]*),([^,]*)\)` +
+	`\s*,\s*` +
+	`complete\s*\(([^,]*),([^,]*),([^,]*)\)` +
+	`\))(?:\s+|$)`)
 
 type bordertype struct{}
 

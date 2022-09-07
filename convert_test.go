@@ -31,13 +31,18 @@ func TestImport(t *testing.T) {
 		{emptyStyle, `bold: aa`, ``, `in "bold: aa": no value found`},
 		{emptyStyle, `bold: true extra`, ``, `in "bold: true extra": excess values at end: ...extra`},
 		{emptyStyle.Foreground(lipgloss.Color("11")), `foreground: unset`, ``, ``},
-		{emptyStyle, `align: top`, ``, ``},
-		{emptyStyle, `align: xx`, ``, `in "align: xx": no value found`},
-		{emptyStyle, `align: bottom`, `align: 1;`, ``},
-		{emptyStyle, `align: center`, `align: 0.5;`, ``},
+		{emptyStyle, `align-horizontal: left`, ``, ``},
 		{emptyStyle, `align: left`, ``, ``},
-		{emptyStyle, `align: right`, `align: 1;`, ``},
-		{emptyStyle, `align: 1.0`, `align: 1;`, ``},
+		{emptyStyle, `align: xx`, ``, `in "align: xx": no value found`},
+		{emptyStyle, `align: center`, `align-horizontal: 0.5;`, ``},
+		{emptyStyle, `align: right`, `align-horizontal: 1;`, ``},
+		{emptyStyle, `align: 1.0`, `align-horizontal: 1;`, ``},
+		{emptyStyle, `align-horizontal: right`, `align-horizontal: 1;`, ``},
+		{emptyStyle, `align-vertical: top`, ``, ``},
+		{emptyStyle, `align-vertical: center`, `align-vertical: 0.5;`, ``},
+		{emptyStyle, `align-vertical: bottom`, `align-vertical: 1;`, ``},
+		{emptyStyle, `align: bottom right`, `align-horizontal: 1;
+align-vertical: 1;`, ``},
 		{emptyStyle.Foreground(lipgloss.Color("11")), `foreground: none`, ``, ``},
 		{emptyStyle.Foreground(lipgloss.Color("11")), `clear`, ``, ``},
 		{emptyStyle.Foreground(lipgloss.Color("11")), `background: 12; clear`, ``, ``},
@@ -46,8 +51,12 @@ func TestImport(t *testing.T) {
 		{emptyStyle, `foreground: #123456`, `foreground: #123456;`, ``},
 		{emptyStyle, `foreground: #axxa`, ``, `in "foreground: #axxa": color not recognized`},
 		{emptyStyle, `foreground: adaptive(1,2)`, `foreground: adaptive(1,2);`, ``},
+		{emptyStyle, `foreground: complete(#111, 22, 3)`, `foreground: complete(#111,22,3);`, ``},
+		{emptyStyle, `foreground: adaptive(complete(#111, 22, 3), complete(#444,55,6))`, `foreground: adaptive(complete(#111,22,3),complete(#444,55,6));`, ``},
 		{emptyStyle, `foreground: adaptive(a,b)`, ``, `in "foreground: adaptive(a,b)": color not recognized: "a"`},
 		{emptyStyle, `foreground: adaptive(1,b)`, ``, `in "foreground: adaptive(1,b)": color not recognized: "b"`},
+		{emptyStyle, `foreground: complete(1,1,b)`, ``, `in "foreground: complete(1,1,b)": color not recognized: "b"`},
+		{emptyStyle, `foreground: adaptive(complete(1,1,b),complete(2,2,b))`, ``, `in "foreground: adaptive(complete(1,1,b),complete(2,2,b))": color not recognized: "b"`},
 		{emptyStyle, `margin: 10`, `margin-bottom: 10;
 margin-left: 10;
 margin-right: 10;
@@ -151,7 +160,7 @@ func TestExport(t *testing.T) {
 		Width(22)
 
 	t.Run("shortened", func(t *testing.T) {
-		exp := `align: 0.5;
+		exp := `align-horizontal: 0.5;
 background: adaptive(#7D56F4,#112233);
 bold: true;
 border-style: border("─","─","│","│","╭","╮","╯","╰");
@@ -178,7 +187,8 @@ width: 22;`
 	})
 
 	t.Run("full", func(t *testing.T) {
-		exp := `align: 0.5;
+		exp := `align-horizontal: 0.5;
+align-vertical: 0;
 background: adaptive(#7D56F4,#112233);
 blink: false;
 bold: true;

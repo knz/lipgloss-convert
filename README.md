@@ -88,9 +88,12 @@ properties, as follows:
   foreground: #aabbcc;
   foreground: 123;
   foreground: adaptive(<color>,<color>);
+  foreground: complete(<truecolor>,<ansi256color>,<ansicolor>);
+  foreground: adaptive(<color>,<color>);
+  foreground: adaptive(complete(<truecolor>,<ansi256color>,<ansicolor>),complete(<truecolor>,<ansi256color>,<ansicolor>));
   ```
 
-- Padding, margin etc which can take multiple values at once:
+- Padding, margin, align etc which can take multiple values at once:
 
   ```
   margin: 10
